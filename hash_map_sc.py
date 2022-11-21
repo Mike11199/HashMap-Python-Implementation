@@ -94,22 +94,15 @@ class HashMap:
         """
         
         table_load = self.table_load()
-        # print("table load is " + str(table_load))
         
         if table_load >= 1.0:  
             curr_capacity = self._capacity
             new_capacity = curr_capacity * 2
             self.resize_table(new_capacity)
-        
-        
-        # print(key)
-        # print(value)
+
         
         _hash = self._hash_function(key)
-        # print("hash result is " + str(_hash))
-        # print("capacity is " + str(self._capacity))
         index = _hash % self._capacity
-        # print("calculated index is " + str(index))
         
         hash_map_bucket = self._buckets[index]
         

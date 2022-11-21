@@ -89,13 +89,41 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        pass
+        table_load = self.table_load()
+        
+        if table_load >= 0.5:  
+            curr_capacity = self._capacity
+            new_capacity = curr_capacity * 2
+            self.resize_table(new_capacity)
+
+        
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity                        
+        
+        if self._buckets[index] is None:   
+            new_entry = HashEntry(key, value) 
+            self._buckets[index] = new_entry
+            self._size += 1
+        else:
+            j = 1
+            quadratic_index = index
+            while self._buckets[quadratic_index] is not None and self._buckets[quadratic_index].key != key:
+                quadratic_index = (index + j**2) % self._capacity
+                j += 1   
+            if self._buckets[quadratic_index] is None:
+                self._size += 1
+                new_entry = HashEntry(key, value) 
+                self._buckets[quadratic_index]= new_entry
+            else:
+                self._buckets.value = value
+
+                
+                
 
     def table_load(self) -> float:
         """
         Load Factor (lowercase lambda) = num elements (size) / num buckets (capacity) 
-        """
-        
+        """        
         load = self._size / self._capacity
         return load
 
@@ -103,32 +131,147 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        pass
+        num_of_empty_buckets = 0
+        
+        for i in range(self._capacity):
+            if self._buckets[i] is None: 
+                num_of_empty_buckets += 1 
+            
+        return num_of_empty_buckets
 
     def resize_table(self, new_capacity: int) -> None:
         """
         TODO: Write this implementation
         """
-        pass
+        if new_capacity < self._size:
+            return
+    
+        curr_capacity = self._capacity
+        if not self._is_prime(new_capacity):
+            new_capacity =  self._next_prime(new_capacity)
+            
+        new_table_load = self._size / new_capacity
+        
+        while new_table_load > 0.5:
+            new_capacity =  new_capacity * 2
+            if not self._is_prime(new_capacity):                
+                 new_capacity =  self._next_prime(new_capacity)
+            new_table_load = self._size / new_capacity
+        
+            
+        self._capacity = new_capacity
+        resized_buckets = DynamicArray()
+        
+        
+        # CREATE A NEW DYNAMIC ARRAY WITH EMPTY LINKED LISTS AT EACH INDEX
+        for _ in range(new_capacity):
+            resized_buckets.append(None)
+
+
+        # RECOMPUTE THE HASH FOR EACH NON-EMPTY ELEMENT OF THE ORIGINAL ARRAY
+        for i in range(curr_capacity):
+            if self._buckets[i] and self._buckets[i].is_tombstone is False:
+                             
+                curr_entry = self._buckets[i]
+                curr_key = curr_entry.key
+
+
+                _hash = self._hash_function(curr_key)
+                index = _hash % self._capacity        
+            
+                if resized_buckets[index] is None:    
+                    resized_buckets[index] = curr_entry
+                else:
+                    j = 1
+                    quadratic_index = index
+                    while resized_buckets[quadratic_index] is not None and resized_buckets[quadratic_index].key != curr_key:
+                        quadratic_index = (index + j**2) % self._capacity
+                        j += 1                
+                    resized_buckets[quadratic_index] = curr_entry
+                
+                
+        self._buckets = resized_buckets
 
     def get(self, key: str) -> object:
         """
         TODO: Write this implementation
         """
-        pass
+        if self._size == 0:
+            return
+        
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity        
+        hash_map_entry = self._buckets[index]
+        
+        if hash_map_entry is None:    
+            return 
+        else:
+            j = 1
+            quadratic_index = index
+
+            while self._buckets[quadratic_index] is not None:
+                
+                if self._buckets[quadratic_index].key == key:
+                    return self._buckets[quadratic_index].value
+                
+                quadratic_index = (index + j**2) % self._capacity
+                j += 1                
+                            
+        return 
 
     def contains_key(self, key: str) -> bool:
         """
         TODO: Write this implementation
         """
-        pass
+        if self._size == 0:
+            return False
+        
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity        
+        hash_map_entry = self._buckets[index]
+        
+        if hash_map_entry is None:    
+            return False
+        else:
+            j = 1
+            quadratic_index = index
+
+            while self._buckets[quadratic_index] is not None:
+                
+                if self._buckets[quadratic_index].key == key:
+                    return True
+                
+                quadratic_index = (index + j**2) % self._capacity
+                j += 1                
+                            
+        return False
 
     def remove(self, key: str) -> None:
         """
         TODO: Write this implementation
         """
-        pass
+        
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity        
+        hash_map_entry = self._buckets[index]
+        
+        if hash_map_entry is None:    
+            return 
+        else:
+            j = 1
+            quadratic_index = index
 
+            while self._buckets[quadratic_index] is not None:
+                
+                if self._buckets[quadratic_index].key == key:
+                    self._buckets[quadratic_index].key = None
+                    self._buckets[quadratic_index].value = None
+                    self._buckets[quadratic_index].is_tombstone = True
+                    return
+                
+                quadratic_index = (index + j**2) % self._capacity
+                j += 1                
+                            
     def clear(self) -> None:
         """
         TODO: Write this implementation
