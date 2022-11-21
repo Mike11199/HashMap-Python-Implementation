@@ -161,11 +161,40 @@ class HashMap:
             return
         
         curr_capacity = self._capacity
-        self._capacity = self._next_prime(new_capacity)
-        change_in_capacity = new_capacity - curr_capacity
+        new_capacity =  self._next_prime(new_capacity)
+        self._capacity = new_capacity
+        resized_buckets = DynamicArray()
         
-        for _ in range(change_in_capacity+1):
-            self._buckets.append(LinkedList())
+        
+        # CREATE A NEW DYNAMIC ARRAY WITH EMPTY LINKED LISTS AT EACH INDEX
+        for _ in range(new_capacity):
+            resized_buckets.append(LinkedList())
+
+
+        # RECOMPUTE THE HASH FOR EACH NON-EMPTY ELEMENT OF THE ORIGINAL ARRAY
+        for i in range(curr_capacity):
+            if self._buckets[i].length() != 0:     
+                
+                # GET HEAD AND ITS KEY FROM LL FROM ORIGINAL HASH TABLE                
+                for node in self._buckets[i]:
+                    head = node
+                    head_key = head.key
+                    head_value = head.value
+
+                    # REHASH KEY FOR RESIZED HASH TABLE
+                    _hash = self._hash_function(head_key)
+                    index = _hash % self._capacity
+                
+                    hash_map_bucket = resized_buckets[index]
+                    hash_map_bucket.insert(head_key, head_value)   
+
+
+
+
+                # resized_buckets[index] = self._buckets[i]                
+                
+        self._buckets = resized_buckets
+
 
     def get(self, key: str):
         """
