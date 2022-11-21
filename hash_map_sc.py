@@ -161,9 +161,20 @@ class HashMap:
         
         if new_capacity < 1:
             return
-        
+    
         curr_capacity = self._capacity
-        new_capacity =  self._next_prime(new_capacity)
+        if not self._is_prime(new_capacity):
+            new_capacity =  self._next_prime(new_capacity)
+            
+        new_table_load = self._size / new_capacity
+        
+        while new_table_load > 1.0:
+            new_capacity =  new_capacity * 2
+            if not self._is_prime(new_capacity):                
+                 new_capacity =  self._next_prime(new_capacity)
+            new_table_load = self._size / new_capacity
+        
+            
         self._capacity = new_capacity
         resized_buckets = DynamicArray()
         
@@ -189,11 +200,7 @@ class HashMap:
                 
                     hash_map_bucket = resized_buckets[index]
                     hash_map_bucket.insert(head_key, head_value)   
-
-
-
-
-                # resized_buckets[index] = self._buckets[i]                
+          
                 
         self._buckets = resized_buckets
 
@@ -241,7 +248,9 @@ class HashMap:
         hash_map_bucket = self._buckets[index]
         
         if hash_map_bucket.length() != 0:
-            hash_map_bucket.remove(key)
+            if hash_map_bucket.remove(key):
+                self._size -= 1
+            
                   
 
     def get_keys_and_values(self) -> DynamicArray:
