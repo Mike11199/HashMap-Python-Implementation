@@ -103,22 +103,52 @@ class HashMap:
         if self._buckets[index] is None:   
             new_entry = HashEntry(key, value) 
             self._buckets[index] = new_entry
-            self._size += 1
+            self._size += 1        
+        elif self._buckets[index].is_tombstone is True:
+            if self._buckets[index].key == key:
+                new_entry = HashEntry(key, value) 
+                self._buckets[index] = new_entry
+                self._size += 1    
+            elif self.contains_key(key) is False:
+                new_entry = HashEntry(key, value) 
+                self._buckets[index] = new_entry
+                self._size += 1                    
+        elif self._buckets[index].key == key:
+                new_entry = HashEntry(key, value) 
+                self._buckets[index] = new_entry
+                                
         else:
             j = 1
             quadratic_index = index
-            while self._buckets[quadratic_index] is not None and self._buckets[quadratic_index].key != key:
+            while self._buckets[quadratic_index] is not None:
+                
+                
+                if self._buckets[index].is_tombstone is True:
+                    if self._buckets[index].key == key:
+                        new_entry = HashEntry(key, value) 
+                        self._buckets[index] = new_entry
+                        self._size += 1   
+                        return 
+                    elif self.contains_key(key) is False:
+                        new_entry = HashEntry(key, value) 
+                        self._buckets[index] = new_entry
+                        self._size += 1    
+                        return                
+        
+                elif self._buckets[quadratic_index].key == key:
+                    self._buckets[quadratic_index].value = value
+                    return
+                
                 quadratic_index = (index + j**2) % self._capacity
                 j += 1   
-            if self._buckets[quadratic_index] is None:
-                self._size += 1
-                new_entry = HashEntry(key, value) 
-                self._buckets[quadratic_index]= new_entry
-            else:
-                self._buckets.value = value
+                
 
-                
-                
+            # if while loop terminates we have reached an array index with value of None
+            self._size += 1
+            new_entry = HashEntry(key, value) 
+            self._buckets[quadratic_index] = new_entry
+
+      
 
     def table_load(self) -> float:
         """
@@ -170,7 +200,7 @@ class HashMap:
 
         # RECOMPUTE THE HASH FOR EACH NON-EMPTY ELEMENT OF THE ORIGINAL ARRAY
         for i in range(curr_capacity):
-            if self._buckets[i] and self._buckets[i].is_tombstone is False:
+            if self._buckets[i]: # and self._buckets[i].is_tombstone is False:
                              
                 curr_entry = self._buckets[i]
                 curr_key = curr_entry.key
@@ -184,10 +214,16 @@ class HashMap:
                 else:
                     j = 1
                     quadratic_index = index
-                    while resized_buckets[quadratic_index] is not None and resized_buckets[quadratic_index].key != curr_key:
+                    while resized_buckets[quadratic_index] is not None:
+                        
+                        if resized_buckets[quadratic_index].is_tombstone:
+                            break
+                        
                         quadratic_index = (index + j**2) % self._capacity
                         j += 1                
+
                     resized_buckets[quadratic_index] = curr_entry
+                        
                 
                 
         self._buckets = resized_buckets
@@ -264,9 +300,8 @@ class HashMap:
             while self._buckets[quadratic_index] is not None:
                 
                 if self._buckets[quadratic_index].key == key:
-                    self._buckets[quadratic_index].key = None
-                    self._buckets[quadratic_index].value = None
                     self._buckets[quadratic_index].is_tombstone = True
+                    self._size -= 1
                     return
                 
                 quadratic_index = (index + j**2) % self._capacity
@@ -300,6 +335,25 @@ class HashMap:
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
+    
+    print("\nPDF - put example - gradescope 1")
+    print("-------------------")
+    m = HashMap(40, hash_function_2)
+    m.put('str0', 200)
+    m.put('str1', 500)
+    m.put('str2', 800)
+    m.put('str3', 1100)
+    m.put('str4', 1400)
+    m.put('str5', 1700)
+    m.put('str6', 2000)
+    m.put('str7', 2300)
+    m.put('str8', 2600)
+    m.put('str9', 2900)
+    m.put('str10', 3200)
+    m.put('str11', 3500)
+    m.put('str12', 3600)
+    m.put('str12', 3700)
+    print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
 
     print("\nPDF - put example 1")
     print("-------------------")
