@@ -327,16 +327,30 @@ class HashMap:
 
     def __iter__(self):
         """
-        TODO: Write this implementation
+        This returns the iterator.  In the iterator, we create a variable, index to track our position in the hash map class.
         """
-        pass
+        self._index = 0  # reference module 3 example from Canvas
+        return self
 
     def __next__(self):
         """
-        TODO: Write this implementation
+        This advances the iterator through each element of the hash map that is NOT empty, empty being "None".
         """
-        pass
-
+        
+        if self._index == self._capacity:
+            raise StopIteration
+        
+        hash_val = self._buckets[self._index]        
+         
+        while hash_val is None:
+            self._index += 1
+            if self._index == self._capacity:
+                raise StopIteration
+            hash_val = self._buckets[self._index]             
+        
+        self._index += 1
+        return hash_val
+        
 
 # ------------------- BASIC TESTING ---------------------------------------- #
 
