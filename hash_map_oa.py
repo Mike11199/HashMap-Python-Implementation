@@ -100,53 +100,50 @@ class HashMap:
         _hash = self._hash_function(key)
         index = _hash % self._capacity                        
         
-        if self._buckets[index] is None:   
-            new_entry = HashEntry(key, value) 
-            self._buckets[index] = new_entry
-            self._size += 1        
-        elif self._buckets[index].is_tombstone is True:
-            if self._buckets[index].key == key:
-                new_entry = HashEntry(key, value) 
-                self._buckets[index] = new_entry
-                self._size += 1    
-            elif self.contains_key(key) is False:
-                new_entry = HashEntry(key, value) 
-                self._buckets[index] = new_entry
-                self._size += 1                    
-        elif self._buckets[index].key == key:
-                new_entry = HashEntry(key, value) 
-                self._buckets[index] = new_entry
+        # if self._buckets[index] is None:   
+        #     new_entry = HashEntry(key, value) 
+        #     self._buckets[index] = new_entry
+        #     self._size += 1        
+        # elif self._buckets[index].is_tombstone is True:
+        #     if self._buckets[index].key == key:
+        #         new_entry = HashEntry(key, value) 
+        #         self._buckets[index] = new_entry
+        #         self._size += 1    
+        #     elif self.contains_key(key) is False:
+        #         new_entry = HashEntry(key, value) 
+        #         self._buckets[index] = new_entry
+        #         self._size += 1                    
+        # elif self._buckets[index].key == key:
+        #         new_entry = HashEntry(key, value) 
+        #         self._buckets[index] = new_entry
                                 
-        else:
-            j = 1
-            quadratic_index = index
-            while self._buckets[quadratic_index] is not None:
-                
-                
-                if self._buckets[index].is_tombstone is True:
-                    if self._buckets[index].key == key:
-                        new_entry = HashEntry(key, value) 
-                        self._buckets[index] = new_entry
-                        self._size += 1   
-                        return 
-                    elif self.contains_key(key) is False:
-                        new_entry = HashEntry(key, value) 
-                        self._buckets[index] = new_entry
-                        self._size += 1    
-                        return                
-        
-                elif self._buckets[quadratic_index].key == key:
-                    self._buckets[quadratic_index].value = value
-                    return
-                
-                quadratic_index = (index + j**2) % self._capacity
-                j += 1   
-                
+        # else:
+        j = 1
+        quad_index = index
+        while self._buckets[quad_index] is not None:
+                        
+            if self._buckets[quad_index].is_tombstone is True:
+                if self._buckets[quad_index].key == key:
+                    self._buckets[quad_index].value = value
+                    return 
+                elif self.contains_key(key) is False:
+                    new_entry = HashEntry(key, value) 
+                    self._buckets[index] = new_entry
+                    self._size += 1    
+                    return                
+    
+            elif self._buckets[quad_index].key == key:
+                self._buckets[quad_index].value = value
+                return
+            
+            quad_index = (index + j**2) % self._capacity
+            j += 1   
+            
 
-            # if while loop terminates we have reached an array index with value of None
-            self._size += 1
-            new_entry = HashEntry(key, value) 
-            self._buckets[quadratic_index] = new_entry
+        # if while loop terminates we have reached an array index with value of None
+        new_entry = HashEntry(key, value) 
+        self._buckets[quad_index] = new_entry
+        self._size += 1
 
       
 
@@ -224,8 +221,7 @@ class HashMap:
 
                     resized_buckets[quadratic_index] = curr_entry
                         
-                
-                
+  
         self._buckets = resized_buckets
 
     def get(self, key: str) -> object:
@@ -299,7 +295,7 @@ class HashMap:
 
             while self._buckets[quadratic_index] is not None:
                 
-                if self._buckets[quadratic_index].key == key:
+                if self._buckets[quadratic_index].key == key and self._buckets[quadratic_index].is_tombstone is False:
                     self._buckets[quadratic_index].is_tombstone = True
                     self._size -= 1
                     return
@@ -311,13 +307,23 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        pass
+        for i in range(self._capacity):
+            self._buckets[i] = None
+        
+        self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
         """
         TODO: Write this implementation
         """
-        pass
+        da_tuples = DynamicArray()
+        
+        for i in range(self._capacity):
+            hash_entry = self._buckets[i]
+            if hash_entry is not None and hash_entry.is_tombstone is False:    
+                da_tuples.append((hash_entry.key, hash_entry.value))
+
+        return da_tuples
 
     def __iter__(self):
         """
