@@ -100,24 +100,6 @@ class HashMap:
         _hash = self._hash_function(key)
         index = _hash % self._capacity                        
         
-        # if self._buckets[index] is None:   
-        #     new_entry = HashEntry(key, value) 
-        #     self._buckets[index] = new_entry
-        #     self._size += 1        
-        # elif self._buckets[index].is_tombstone is True:
-        #     if self._buckets[index].key == key:
-        #         new_entry = HashEntry(key, value) 
-        #         self._buckets[index] = new_entry
-        #         self._size += 1    
-        #     elif self.contains_key(key) is False:
-        #         new_entry = HashEntry(key, value) 
-        #         self._buckets[index] = new_entry
-        #         self._size += 1                    
-        # elif self._buckets[index].key == key:
-        #         new_entry = HashEntry(key, value) 
-        #         self._buckets[index] = new_entry
-                                
-        # else:
         j = 1
         quad_index = index
         while self._buckets[quad_index] is not None:
@@ -125,10 +107,12 @@ class HashMap:
             if self._buckets[quad_index].is_tombstone is True:
                 if self._buckets[quad_index].key == key:
                     self._buckets[quad_index].value = value
+                    self._buckets[quad_index].is_tombstone = False
+                    self._size +=1
                     return 
                 elif self.contains_key(key) is False:
                     new_entry = HashEntry(key, value) 
-                    self._buckets[index] = new_entry
+                    self._buckets[quad_index] = new_entry
                     self._size += 1    
                     return                
     
@@ -149,14 +133,20 @@ class HashMap:
 
     def table_load(self) -> float:
         """
-        Load Factor (lowercase lambda) = num elements (size) / num buckets (capacity) 
+        This method returns the table load factor which is defined as the below function:
+        
+                Load Factor (lowercase lambda) = num elements (size) / num buckets (capacity) 
+                
+        The put method of the hash table will call the resize function based on the load factor's value.
         """        
         load = self._size / self._capacity
         return load
 
     def empty_buckets(self) -> int:
         """
-        TODO: Write this implementation
+        This method returns the number of empty buckets (dynamic array indexes with the value of None) in the hash table.
+        
+        A tombstone value is NOT considered an empty bucket.
         """
         num_of_empty_buckets = 0
         
@@ -168,61 +158,37 @@ class HashMap:
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        This method resizes the hash table.  It will only resize a hash table to a value equal or larger to the number of elements present in the 
+        internal dynamic array.  It will also ensure the new capacity is a prime number.
+        
+        The method creates a new hash table object, and re-hashes each element into the original hash table in its new position, based on the new capacity.
+        
+        It uses the put method, which handles resizing if the table load drops to or below 0.5.                
         """
+        
+        # DO NOTHING IF NEW CAPACITY IS SMALLER THAN NUMBER OF ELEMENTS CURRENTLY IN THE HASH TABLE ( AS ELEMENTS WOULD BE LOST )
         if new_capacity < self._size:
             return
-    
-        curr_capacity = self._capacity
+
+        # IF NEW CAPACITY IS NOT PRIME, INCREMENT UNTIL IT IS A PRIME NUMBER            
         if not self._is_prime(new_capacity):
             new_capacity =  self._next_prime(new_capacity)
             
-        new_table_load = self._size / new_capacity
+        # CREATE A NEW HASH MAP WITH THE NEW CAPACITY GIVEN    
+        new_hash_map = HashMap(new_capacity, self._hash_function)
         
-        while new_table_load > 0.5:
-            new_capacity =  new_capacity * 2
-            if not self._is_prime(new_capacity):                
-                 new_capacity =  self._next_prime(new_capacity)
-            new_table_load = self._size / new_capacity
-        
-            
-        self._capacity = new_capacity
-        resized_buckets = DynamicArray()
-        
-        
-        # CREATE A NEW DYNAMIC ARRAY WITH EMPTY LINKED LISTS AT EACH INDEX
-        for _ in range(new_capacity):
-            resized_buckets.append(None)
+        # ITERATE THROUGH THE OLD HASH MAP.  IF THE VALUE IS NOT NONE, ADD IT TO THE NEW HASH MAP USING THE NEW HASH MAP'S PUT FUNCTION
+        for i in range(self._capacity):
+            if self._buckets[i]:
+                new_key = self._buckets[i].key
+                new_value = self._buckets[i].value
+                new_hash_map.put(new_key, new_value)  # PUT FUNCTION WILL HANDLE ADDITIONAL RESIZING BASED ON TABLE LOAD IF NEEDED
 
 
-        # RECOMPUTE THE HASH FOR EACH NON-EMPTY ELEMENT OF THE ORIGINAL ARRAY
-        for i in range(curr_capacity):
-            if self._buckets[i]: # and self._buckets[i].is_tombstone is False:
-                             
-                curr_entry = self._buckets[i]
-                curr_key = curr_entry.key
+        # SWAP UNDERLYING DYNAMIC ARRAY AND CAPACITY FROM NEW HASH TABLE TO CURRENT HASH TABLE.  SIZE REMAINS THE SAME
+        self._buckets = new_hash_map._buckets
+        self._capacity = new_hash_map._capacity
 
-
-                _hash = self._hash_function(curr_key)
-                index = _hash % self._capacity        
-            
-                if resized_buckets[index] is None:    
-                    resized_buckets[index] = curr_entry
-                else:
-                    j = 1
-                    quadratic_index = index
-                    while resized_buckets[quadratic_index] is not None:
-                        
-                        if resized_buckets[quadratic_index].is_tombstone:
-                            break
-                        
-                        quadratic_index = (index + j**2) % self._capacity
-                        j += 1                
-
-                    resized_buckets[quadratic_index] = curr_entry
-                        
-  
-        self._buckets = resized_buckets
 
     def get(self, key: str) -> object:
         """
@@ -280,7 +246,12 @@ class HashMap:
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        This method removes a given key and its value from the hash map.  It uses quadratic probing (initial index + j^2), until it reaches an index with None, in
+        case the value to be removed was inserted after encountering a table collision. 
+        
+        In the case of this hash table, when removing a key/value, the index where the key/value was located at is NOT changed to None.
+        
+        Instead, the is_tombstone method of the hash entry class that occupies 
         """
         
         _hash = self._hash_function(key)
@@ -305,7 +276,10 @@ class HashMap:
                             
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        This method clears all values in the underlying dynamic array of the hash table.  It iterates through the dynamic array and sets each
+        index to None.  Then it resets the size variable of the hash table to zero to reflect that it contains no elements.
+        
+        Capacity remains unchanged.
         """
         for i in range(self._capacity):
             self._buckets[i] = None
@@ -314,7 +288,10 @@ class HashMap:
 
     def get_keys_and_values(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        This method returns a new dynamic array, where each index is a tuple of the key/value pair stored in the hash map.
+        
+        The tuples are returned from smallest to greatest index from where they are located in the hash table's underlying dynamic array, 
+        from their insertion point based on the hash function and quadratic open addressing scheme, and not in any particular order.
         """
         da_tuples = DynamicArray()
         
@@ -367,12 +344,13 @@ if __name__ == "__main__":
                         [31,584,24528],[32,818,34356],[33,870,36540],[35,766,32172],[37,753,31626],[39,844,35448],[41,935,39270],[42,896,37632],[43,727,30534],
                         [44,883,37086],[45,922,38724],[46,974,40908],[50,857,35994],[52,948,39816],[57,987,41454],[60,831,34902],[67,961,40362],[131,220,9240],
                         [133,311,13062],[134,610,25620],[135,103,4326],[136,402,16884],[138,350,14700],[139,701,29442],[140,142,5964],[141,441,18522],
-                        [142,233,9786],[143,532,22344],[144,324,13608],[145,480,20160],[147,272,11424],[148,506,21252],[149,181,7602],[150,116,4872],[151,454,19068],
+                        [142,233,9786],[143,532,22344],[144,324,13608],[145,480,20160],[146,415,17430], [147,272,11424],[148,506,21252],[149,181,7602],[150,116,4872],[151,454,19068],
                         [152,51,2142],[153,246,10332],[154,90,3780],[155,337,14154],[156,194,8148],[157,129,5418],[158,64,2688],[159,285,11970],[160,376,15792],
                         [161,428,17976],[162,168,7056]]
+    m._size = 75
 
     for array_elem in gradescope_array:
-        hash_entry = HashEntry(array_elem[1],array_elem[2])
+        hash_entry = HashEntry(str(array_elem[1]),array_elem[2])
         m._buckets[array_elem[0]] = hash_entry
         
     m.resize_table(111)
