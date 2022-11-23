@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
-# Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Name:             Michael Iwanek
+# OSU Email:        iwanekm@oregonstate.edu
+# Course:           CS261 - Data Structures
+# Assignment:       Assignment #6 - HashMap Implementation - Part 1 - Separate Chaining
+# Due Date:         12/02/22 @ 11:59PM
+# Description:      Write methods to implement a HashMap, using separate chaining (linked lists at each array index) to resolve table collisions. 
 
 
 from a6_include import (DynamicArray, LinkedList,

@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
-# Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Name:             Michael Iwanek
+# OSU Email:        iwanekm@oregonstate.edu
+# Course:           CS261 - Data Structures
+# Assignment:       Assignment #6 - HashMap Implementation - Part 2 - Open Addressing via Quadratic Probing
+# Due Date:         12/02/22 @ 11:59PM
+# Description:      Write methods to implement a HashMap, using open addressing (quadratic probing and tombstones) to resolve table collisions. 
+
 
 from a6_include import (DynamicArray, DynamicArrayException, HashEntry,
                         hash_function_1, hash_function_2)
@@ -87,16 +88,31 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new key/value pair as a hash entry into the hash table, and increments the hash table's size.
+        
+        Before adding a value, the table load of the (num elements/ capacity) is calculated.  If the table load is above or equal to 0.5, meaning that half
+        the underlying dynamic array's values are filled, the table is resized to double the current capacity, to the nearest prime number.  This helps reduce
+        collisions and ensures O(1) time complexity for most operations.
+        
+        The method first uses the hash function to calculate the insertion point of the new key/value pair.
+        
+        If the insertion point is a tombstone, it will update the tombstone if its key matches the key to be added, or if the key is not elsewhere in the table.
+        
+        If the insertion point matches the key, it will update the value.
+        
+        If the insertion point is a key/value not matching the key and not a tombstone, it will continue to increment the index using quadratic probing, until
+        an empty spot in the hash table is reached, or the previous conditions of finding the existing key, tombstone with existing key, or tombstone where key
+        is not elsewhere is met.                  
         """
         table_load = self.table_load()
         
+        # RESIZE IF HALF OF DYNAMIC ARRAY OF HASH TABLE'S FREE SPACE IS 50 PERCENT OR LESS
         if table_load >= 0.5:  
             curr_capacity = self._capacity
             new_capacity = curr_capacity * 2
             self.resize_table(new_capacity)
 
-        
+        # CALCULATE INITIAL INDEX BASED ON HASH FUNCTION AND KEY
         _hash = self._hash_function(key)
         index = _hash % self._capacity                        
         
@@ -105,26 +121,29 @@ class HashMap:
         while self._buckets[quad_index] is not None:
                         
             if self._buckets[quad_index].is_tombstone is True:
+                # IF A TOMBSTONE EXISTS WITH CURRENT KEY, UPDATE IT TO REMOVE THE TOMBSTONE AND UPDATE VALUE AS WELL
                 if self._buckets[quad_index].key == key:
                     self._buckets[quad_index].value = value
                     self._buckets[quad_index].is_tombstone = False
                     self._size +=1
                     return 
-                elif self.contains_key(key) is False:
+                # IF A TOMBSTONE EXISTS NOT EQUAL TO THE CURRENT KEY, AND THE KEY DOES NOT EXIST ELSEWHERE IN THE TABLE, REPLACE TOMBSTONE WITH KEY/VALUE
+                elif self.contains_key(key) is False:                    
                     new_entry = HashEntry(key, value) 
                     self._buckets[quad_index] = new_entry
                     self._size += 1    
                     return                
-    
+            
+            # IF NOT THE VALUE IS NOT A TOMBSTONE, BUT IS EQUAL TO THE CURRENT KEY, SIMPLY UPDATE THE VALUE AND RETURN
             elif self._buckets[quad_index].key == key:
                 self._buckets[quad_index].value = value
                 return
             
-            quad_index = (index + j**2) % self._capacity
+            quad_index = (index + j**2) % self._capacity   #QUADRATIC PROBING TO INCREMENT INSERTION INDEX IF NEEDED
             j += 1   
             
-
-        # if while loop terminates we have reached an array index with value of None
+        
+        # IF THE FUNCTION REACHES HERE AND HAS NOT RETURNED, WE HAVE REACHED A NONE VALUE TO INSERT THE NEW KEY/VALUE PAIR INTO
         new_entry = HashEntry(key, value) 
         self._buckets[quad_index] = new_entry
         self._size += 1
@@ -192,7 +211,12 @@ class HashMap:
 
     def get(self, key: str) -> object:
         """
-        TODO: Write this implementation
+        This method returns the VALUE of a given key from the hash table.  It first calculates the index to search using the hash function and the capacity of 
+        the hash table. It then uses quadratic probing to increment the index if there were previous table collisions. 
+        
+        If the key cannot be found in the hash table, or if the hash table is empty, the function returns "None".        
+        
+        Time Complexity: O(1)
         """
         if self._size == 0:
             return
@@ -212,18 +236,28 @@ class HashMap:
                 if self._buckets[quadratic_index].key == key:
                     return self._buckets[quadratic_index].value
                 
-                quadratic_index = (index + j**2) % self._capacity
+                quadratic_index = (index + j**2) % self._capacity   # USE QUADRATIC PROBING TO INCREMENT INDEX UNTIL KEY IS FOUND OR INDEX IS NONE
                 j += 1                
                             
         return 
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        This method returns True or False, depending on whether a given key exists in the hash table.  If the hash table is empty, False is returned.
+        
+        The method first calculates the index based on the hash function of the table, and the table's capacity.
+        
+        It then increments the index using quadratic probing, until the key is found in the hash entry that exists at each array index, or the index is 
+        None.
+        
+        Time Complexity: O(1)
         """
+        
+        # RETURN FALSE IF HASH MAP IS EMPTY
         if self._size == 0:
             return False
         
+        # CALCULATE INDEX BASED ON HASH FUNCTION AND HASH TABLE CAPACITY
         _hash = self._hash_function(key)
         index = _hash % self._capacity        
         hash_map_entry = self._buckets[index]
@@ -239,7 +273,7 @@ class HashMap:
                 if self._buckets[quadratic_index].key == key:
                     return True
                 
-                quadratic_index = (index + j**2) % self._capacity
+                quadratic_index = (index + j**2) % self._capacity   # USE QUADRATIC PROBING TO INCREMENT INDEX UNTIL KEY IS FOUND OR INDEX IS NONE
                 j += 1                
                             
         return False
@@ -251,13 +285,25 @@ class HashMap:
         
         In the case of this hash table, when removing a key/value, the index where the key/value was located at is NOT changed to None.
         
-        Instead, the is_tombstone method of the hash entry class that occupies 
+        Instead, the is_tombstone variable of the hash entry class that occupies the index is changed from False to True, and the size of the hash table is 
+        decremented to reflect the change.  
+        
+        If the particular key is not found in the hash table, or the is_tombstone variable is already True, then the method simply returns.
+        
+        The tombstone is important so that quadratic probing does not end early, if other values after the index to be removed were inserted after quadratic 
+        probing.  Otherwise, if the value to be removed were changed to None, the quadratic probing would end too soon, and the "contains" and "remove" functions
+        would not work properly.
+        
+        This method will not loop indefinitely as the put function ensure the table load is under 0.5, so it will eventually encounter an empty array index
+        with None and return.
         """
         
+        # CALCULATE INITIAL ARRAY INDEX BASED ON THE HASH FUNCTION/ DYNAMIC ARRAY SIZE
         _hash = self._hash_function(key)
         index = _hash % self._capacity        
         hash_map_entry = self._buckets[index]
         
+        # IF NONE, RETURN IMMEDIATELY.  ELSE, PROBE UNTIL NONE OR THE KEY IS ENCOUNTERED.  THIS KEY MAY BE A HASH ENTRY EXISTING IN A TOMBSTONE.
         if hash_map_entry is None:    
             return 
         else:
@@ -266,9 +312,10 @@ class HashMap:
 
             while self._buckets[quadratic_index] is not None:
                 
+                # ONLY DECREMENT SIZE AND CHANGE TO TOMBSTONE IF THE HASH ENTRY MATCHING THAT KEY IS NOT ALREADY A TOMBSTONE
                 if self._buckets[quadratic_index].key == key and self._buckets[quadratic_index].is_tombstone is False:
                     self._buckets[quadratic_index].is_tombstone = True
-                    self._size -= 1
+                    self._size -= 1                                         
                     return
                 
                 quadratic_index = (index + j**2) % self._capacity
@@ -281,6 +328,8 @@ class HashMap:
         
         Capacity remains unchanged.
         """
+        
+        # ITERATE THROUGH HASH TABLE AND SET ALL UNDERLYING DYNAMIC ARRAY INDICES TO NONE
         for i in range(self._capacity):
             self._buckets[i] = None
         
@@ -295,6 +344,7 @@ class HashMap:
         """
         da_tuples = DynamicArray()
         
+        # ITERATE THROUGH HASH TABLE AND ADD TO DYNAMIC ARRAY IF ARRAY INDEX IS NOT NONE, AND NOT A TOMBSTONE VALUE
         for i in range(self._capacity):
             hash_entry = self._buckets[i]
             if hash_entry is not None and hash_entry.is_tombstone is False:    
@@ -304,14 +354,17 @@ class HashMap:
 
     def __iter__(self):
         """
-        This returns the iterator.  In the iterator, we create a variable, index to track our position in the hash map class.
+        This returns the iterator.  In the iterator, we create a variable - index - to track our position in the hash map class.
         """
         self._index = 0  # reference module 3 example from Canvas
         return self
 
     def __next__(self):
         """
-        This advances the iterator through each element of the hash map that is NOT empty, empty being "None".
+        This method advances the iterator through each element of the hash map that is NOT empty, empty being "None".
+        
+        It allows the capability for a user to iterate through the hash map with the syntax  "for item in hashmap", without needing to understand 
+        the inner functionality of the hash table.
         """
         
         if self._index == self._capacity:
@@ -332,8 +385,7 @@ class HashMap:
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-    
-    
+      
     
     print("\nPDF - failed resize test case - gradescope #1")
     print("-------------------")
@@ -355,9 +407,6 @@ if __name__ == "__main__":
         
     m.resize_table(111)
 
-       
-    
-    
     
     print("\nPDF - put example 1")
     print("-------------------")
