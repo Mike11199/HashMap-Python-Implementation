@@ -394,6 +394,7 @@ if __name__ == "__main__":
         if i % 10 == 9:
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
 
+
     print("\nPDF - empty_buckets example 1")
     print("-----------------------------")
     m = HashMap(101, hash_function_1)
