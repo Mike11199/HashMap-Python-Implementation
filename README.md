@@ -27,7 +27,7 @@ def hash_function_2(key: str) -> int:
 ```
 </br>
 
-# Table Collisions - Birthday Problem
+# Table Collisions - The Birthday Paradox
 
 Reference https://betterexplained.com/articles/understanding-the-birthday-paradox/
 
