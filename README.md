@@ -90,7 +90,52 @@ As such, separate chaining and open addressing is used to handle these potential
 
 # Separate Chaining
 
+Separate chaining uses a linked list at each index location of the underlying dynamic array.  If a collision occurs, the key/value pair is added to the linked list at that index.
+
+This table resizes the underlying dynamic array to double its capacity if the load factor is equal to or greater than 1.
+
+This can 
+
 ![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
+
+
+```python
+class HashMap:
+   def __init__(self, capacity: int, function) -> None:
+
+   def __str__(self) -> str:
+
+   def _next_prime(self, capacity: int) -> int:
+
+   @staticmethod
+   def _is_prime(capacity: int) -> bool:
+
+   def get_size(self) -> int:
+
+   def get_capacity(self) -> int:
+
+   def put(self, key: str, value: object) -> None:
+
+   def empty_buckets(self) -> int:
+
+   def table_load(self) -> float:
+   
+   def clear(self) -> None:
+   
+   def resize_table(self, new_capacity: int) -> None:
+   
+   def get(self, key: str):
+   
+   def contains_key(self, key: str) -> bool:
+   
+   def remove(self, key: str) -> None:
+   
+   def get_keys_and_values(self) -> DynamicArray:
+   
+   def find_mode(da: DynamicArray):
+
+```
+
 
 
 </br>
@@ -99,6 +144,8 @@ As such, separate chaining and open addressing is used to handle these potential
 
 
 Quadratic Probing is calculated using the following formula, where i = index.  j is incremented by 1 each time the probe occurrs, until an empty spot is found in the dynamic array to insert the element.
+
+This table resizes the underlying dynamic array to double its capacity if the load factor is equal to or greater than 0.5.
 
 ```math 
 {i_{initial} + j^2 } \bmod m
