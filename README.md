@@ -97,6 +97,48 @@ As such, separate chaining and open addressing is used to handle these potential
 
 # Open Addressing
 
-Quadratic - Probing
+
+Quadratic Probing is calculated using the following formula, where i = index.  j is incremented by 1 each time the probe occurrs, until an empty spot is found in the dynamic array to insert the element.
+
+```math 
+{i_{initial} + j^2 } \bmod m
+```
 
 ![image](https://user-images.githubusercontent.com/91037796/204156785-6202cd9b-e6e5-455c-83fc-a50534af536c.png)
+
+
+If elements are removed, removed elements are converted to tombstone values, so that lookups of existing elements do not end early.  This means a flag of the element is set to True to indicate the key/value pair is a tombstone, as oppossed to setting it back to the default value of None.
+
+</br>
+
+```python
+class HashMap:
+    def __init__(self, capacity: int, function) -> None:
+
+    def __str__(self) -> str:
+
+    def _next_prime(self, capacity: int) -> int:
+
+    @staticmethod
+    def _is_prime(capacity: int) -> bool:
+   
+    def put(self, key: str, value: object) -> None:
+    
+    def empty_buckets(self) -> int:
+
+    def resize_table(self, new_capacity: int) -> None:
+      
+    def get(self, key: str) -> object:
+      
+    def contains_key(self, key: str) -> bool:
+
+    def remove(self, key: str) -> None:
+ 
+    def clear(self) -> None:
+
+    def get_keys_and_values(self) -> DynamicArray:
+
+    def __iter__(self):
+
+    def __next__(self):
+```
