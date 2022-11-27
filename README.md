@@ -27,6 +27,21 @@ def hash_function_2(key: str) -> int:
 ```
 
 
+# Table Collisions
+
+Reference https://betterexplained.com/articles/understanding-the-birthday-paradox/
+
+A simplified way to view the chance of a hash table collision is by using the Birthday Paradox.  This is a non-intuitive paradox which states that in a room of 23 people, there is about a 50% chance two share the same birthday.
+
+To explain this concept, we can take the combination of these 23 people, which is equal to 253. This is the number of pairs of people we can create where order doesn't matter, or number of birthday comparisons.
+
+In a hash table, the mumber of people would be equal to the capacity of our table, for example, if we had a hash table with 23 slots and choosing two elements that could hash to the same index.
+
+
+![image](https://user-images.githubusercontent.com/91037796/204158108-db5e66fc-bc83-432a-8cb2-8ef02a8244a8.png)
+
+
+
 # Separate Chaining
 
 ![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
