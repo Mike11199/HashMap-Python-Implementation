@@ -31,11 +31,11 @@ def hash_function_2(key: str) -> int:
 
 Reference https://betterexplained.com/articles/understanding-the-birthday-paradox/
 
-A simplified way to view the chance of a hash table collision is by using the Birthday Paradox.  This is a non-intuitive paradox which states that in a room of 23 people, there is about a 50% chance two share the same birthday.
+A simplified way to view the chance of a hash table collision is by using the Birthday Paradox.  This is a non-intuitive problem which states that in a room of 23 people, there is about a 50% chance two share the same birthday.
 
 To explain this concept, we can take the combination of these 23 people, which is equal to 253. This is the number of pairs of people we can create where order doesn't matter, or number of birthday comparisons.
 
-In a hash table, the mumber of people would be equal to the capacity of our table, for example, if we had a hash table with 23 slots and choosing two elements that could hash to the same index.
+In a hash table, the mumber of people would be equal to the capacity, or number of buckets in our table.  For example, if we had a hash table with 23 slots and choosing two elements that could hash to the same index.
 
 
 ![image](https://user-images.githubusercontent.com/91037796/204158108-db5e66fc-bc83-432a-8cb2-8ef02a8244a8.png)
@@ -47,9 +47,7 @@ In the birthday paradox there is a 99.7% chance two pairs will not share the sam
 {1 - \frac{1}{365} = \frac{364}{365} = .997260}
 ```
 
-Taking the exponent of that chance, or multiplied by the number of 253 possible pairs of comparisons, there is a roughly 49.95% chance none of them will have the same birthday, or 1- 49.95% = 50.05% chance at least one person will share a birthday. Reference
-
-https://everythingcomputerscience.com/discrete_mathematics/Data_Structures/Hash_Table.html
+Taking the exponent of that chance, or multiplied by the number of 253 possible pairs of comparisons, there is a roughly 49.95% chance none of them will have the same birthday, or 1 - 49.95% = 50.05% chance at least one person will share a birthday.
 
 
 ```math
@@ -61,10 +59,13 @@ https://everythingcomputerscience.com/discrete_mathematics/Data_Structures/Hash_
 \displaystyle{\left(\frac{364}{365}\right)^{253} = .4995}
 ```
 
-</br>
+</br> 
+
 # Table Collisions - HashMap Example
 
-Using similar math following the birthday problem, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot: 
+Using similar math following the birthday problem, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot.
+
+We use the combination formula from 2,450 keys choose two to calculate that there are 3,000,025 possible pairs.
 
 
 ```math
@@ -73,12 +74,14 @@ C(n,k) = \binom{n}{k} = \frac{2,450!}{2!(2,448)! } = 3,000,025
 
 There is a 999,999 in 1,000,000, or 99.9999% chance of not being in a collision for a single pair.  This is the chance of NOT inserting a key/value pair into the same bucket.
 
-The chance of there not being a collision for all possible pairings of 2,450 keysraisesed to the exponent of the number of pairs:
+The chance of there not being a collision for all possible pairings of 2,450 keys inserted to the hash table, is the probability of not having a single collision raised to the exponent of the number of pairs:
 
 ```math
 {0.999999}^{3,000,025} = 4.97% 
 ```
-1 - 4.97% is a 95% chance that at least two keys in this hash table will be hashed to the same slot.
+If there is a 4.97% of there not being a single collision in a hash table with 1 million buckets and 2,450 keys, then there is a 1 - 4.97%, or 95% chance that at least two keys in this hash table will be hashed to the same slot.  
+
+As such, separate chaining and open addressing is used to handle these potential collisions.
 
 
 </br>
