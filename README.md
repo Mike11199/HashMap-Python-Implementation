@@ -13,7 +13,7 @@ This is the portfolio project for the Oregon State University course CS 261 - Da
 
 # Hash Function
 
-A hash function is a non-reversible function which converts data to a positive integer.  The modulus of this function result divided by the array capacity is used to place a key/value pair into the underlying dynamic array data structure.  A simmple hash function is used in this implementation, which uses the "ord" function to extract the unicode code for each number/char of the input, and multiplies it by the index of the element.  These are all summed to produce the result.    
+A hash function is a non-reversible function which converts data to a positive integer.  The modulus of this function result divided by the array capacity is used to place a key/value pair into the underlying dynamic array data structure.  A simple hash function is used in this implementation, which uses the "ord" function to extract the unicode code for each number/char of the input, and multiplies it by the index of the element.  These are all summed to produce the result.    
 
 ```python
 def hash_function_2(key: str) -> int:
@@ -25,3 +25,15 @@ def hash_function_2(key: str) -> int:
         index += 1
     return hash
 ```
+
+
+# Separate Chaining
+
+![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
+
+
+# Open Addressing
+
+Quadratic - Probing
+
+![image](https://user-images.githubusercontent.com/91037796/204156785-6202cd9b-e6e5-455c-83fc-a50534af536c.png)
