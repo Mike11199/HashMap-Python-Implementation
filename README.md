@@ -61,11 +61,19 @@ https://everythingcomputerscience.com/discrete_mathematics/Data_Structures/Hash_
 \displaystyle{\left(\frac{364}{365}\right)^{253} = .4995}
 ```
 
-Using similar math following the birthday probelm, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot: 
+Using similar math following the birthday problem, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot: 
 
 ```math
-C(n,k) = \binom{n}{k} = \frac{n!}{k!(n-k)!}
+C(n,k) = \binom{n}{k} = \frac{2,450!}{2!(2,448)! }= 3,000,025 pairs
 ```
+
+999,999 in 1,000,000 or 99.9999% chance of not being in a collision, which is the chance of NOT inserting a key/value pair into the same bucket, raisesed to the exponent of the number of pairs:
+
+```math
+{0.999999}^{3,000,025}} = 4.97% 
+```
+1- 4.97% is a 95% chance that at least two keys in this hash table will be hashed to the same slot.
+
 
 {N\choose k}
 
