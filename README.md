@@ -48,7 +48,7 @@ A simplified way to view the chance of a hash table collision is by using the Bi
 
 To explain this concept, we can take the possible two-person combinations of these 23 people, which is equal to 253. This is the number of pairs of people we can create where order doesn't matter, or number of potential birthday comparisons.
 
-In a hash table, the number of people in the birthday paradox would be equivalent to the key/value pairs to be inserted in the table, as this calculates the number of possible comparsions between two elements or pairings.  
+In a hash table, the number of participants in the birthday paradox would be equivalent to the key/value pairs to be inserted in the table, as this calculates the number of possible comparsions between two elements or pairings.  
 
 
 ![image](https://user-images.githubusercontent.com/91037796/204158108-db5e66fc-bc83-432a-8cb2-8ef02a8244a8.png)
