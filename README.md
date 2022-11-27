@@ -72,7 +72,7 @@ We use the combination formula from 2,450 keys choose two to calculate that ther
 C(n,k) = \binom{n}{k} = \frac{2,450!}{2!(2,448)! } = 3,000,025 
 ```
 
-There is a 999,999 in 1,000,000, or 99.9999% chance of not being in a collision for a single pair.  This is the chance of NOT inserting a key/value pair into the same bucket. Assuming a hash function with a uniform distribution.
+There is a 999,999 in 1,000,000, or 99.9999% chance of not being in a collision for a single pair.  This is the chance of NOT inserting a key/value pair into the same bucket. Assuming a hash function with a uniform distribution.  Then the probability would be (n-2)/n for the next pair, but the math below will not consider that to simplify the example.
 
 The chance of there NOT being a collision for all possible pairings of 2,450 keys inserted to the hash table, is the probability of not having a single collision raised to the exponent of the number of pairs:
 
