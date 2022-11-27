@@ -87,12 +87,14 @@ As such, separate chaining and open addressing is used to handle these potential
 
 
 </br>
+
 # Separate Chaining
 
 ![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
 
 
 </br>
+
 # Open Addressing
 
 Quadratic - Probing
