@@ -41,6 +41,33 @@ In a hash table, the mumber of people would be equal to the capacity of our tabl
 ![image](https://user-images.githubusercontent.com/91037796/204158108-db5e66fc-bc83-432a-8cb2-8ef02a8244a8.png)
 
 
+In the birthday paradox there is a 99.7% chance two pairs will not share the same birthday.
+
+```math
+{1 - \frac{1}{365} = \frac{364}{365} = .997260}
+```
+
+Taking the exponent of that chance, or multiplied by the number of 253 possible pairs of comparisons, there is a roughly 49.95% chance none of them will have the same birthday, or 1- 49.95% = 50.05% chance at least one person will share a birthday. Reference
+
+https://everythingcomputerscience.com/discrete_mathematics/Data_Structures/Hash_Table.html
+
+
+```math
+{1 - \frac{1}{365} = \frac{364}{365} = .997260}
+```
+
+
+```math
+\displaystyle{\left(\frac{364}{365}\right)^{253} = .4995}
+```
+
+Using similar math following the birthday probelm, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot: 
+
+```math
+C(n,k) = \binom{n}{k} = \frac{n!}{k!(n-k)!}
+```
+
+{N\choose k}
 
 # Separate Chaining
 
