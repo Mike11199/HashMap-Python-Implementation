@@ -2,6 +2,8 @@
 
 This is the portfolio project for the Oregon State University course CS 261 - Data Structures, which is allowed to be posted to a public GitHub repo.  The project implements a HashMap data structure using two distinct methods to handle table collisions - Open Addressing, and Separate Chaining.
 
+A hash map allows insertion and lookup of values in amortized constant time O(1), with a potential O(N) resizing cost when the hash table must be resized, in order to keep the table load factor low enough to redue the chance of collisions. 
+
 
 - **Open Addressing**
    - In this implementation, the data structure probes for an empty spot in the HashTable's underlying dynamic array if a collision occurs, until it finds an empty spot to insert the element in. 
@@ -94,7 +96,6 @@ Separate chaining uses a linked list at each index location of the underlying dy
 
 This table resizes the underlying dynamic array to double its capacity if the load factor is equal to or greater than 1.
 
-This can 
 
 ![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
 
