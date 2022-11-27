@@ -76,7 +76,7 @@ Taking the exponent of that chance, or multiplied by the number of 253 possible 
 
 # Table Collisions - HashMap Example
 
-Using similar math following the birthday problem, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot.
+Using the same mathematical approach found in the birthday paradox, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot.
 
 We use the combination formula from 2,450 keys choose two to calculate that there are 3,000,025 possible pairs or comparisons.
 
