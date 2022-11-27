@@ -25,7 +25,7 @@ def hash_function_2(key: str) -> int:
         index += 1
     return hash
 ```
-
+</br>
 
 # Table Collisions
 
@@ -76,13 +76,13 @@ C(n,k) = \binom{n}{k} = \frac{2,450!}{2!(2,448)! } = 3,000,025
 1- 4.97% is a 95% chance that at least two keys in this hash table will be hashed to the same slot.
 
 
-{N\choose k}
-
+</br>
 # Separate Chaining
 
 ![image](https://user-images.githubusercontent.com/91037796/204156689-e0456afc-acf2-4169-8a97-9fbd54997a2e.png)
 
 
+</br>
 # Open Addressing
 
 Quadratic - Probing
