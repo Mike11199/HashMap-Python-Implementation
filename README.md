@@ -2,7 +2,6 @@
 
 This is the portfolio project for the Oregon State University course CS 261 - Data Structures, which is allowed to be posted to a public GitHub repo.  The project implements a HashMap data structure using two distinct methods to handle table collisions - Open Addressing, and Separate Chaining.
 
-A hash map allows insertion and lookup of values in amortized constant time O(1), with a potential O(N) resizing cost when the hash table must be resized, in order to keep the table load factor low enough to redue the chance of collisions. 
 
 
 - **Open Addressing**
@@ -10,6 +9,18 @@ A hash map allows insertion and lookup of values in amortized constant time O(1)
 
 - **Separate Chaining**
    - In this implementation, each dynamic array element is a linked list, and additional key/value pairs can be added to the front of the linked list at each array spot in the case that keys hash to the same array index. 
+
+</br>
+
+# HashMap Time Complexity
+
+A hash map allows insertion and lookup of values in amortized constant time O(1), with a potential O(N) resizing cost.  Resizing the table is performed in order to keep the table load factor low, which reduces the chance of collisions occurring. 
+
+The load factor is expressed as n (number of elements) / m (number of buckets).
+
+```math
+\lambda	= n / m
+```
 
 </br>
 
