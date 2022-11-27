@@ -33,9 +33,9 @@ Reference https://betterexplained.com/articles/understanding-the-birthday-parado
 
 A simplified way to view the chance of a hash table collision is by using the Birthday Paradox.  This is a non-intuitive problem which states that in a room of 23 people, there is about a 50% chance two share the same birthday.
 
-To explain this concept, we can take the combination of these 23 people, which is equal to 253. This is the number of pairs of people we can create where order doesn't matter, or number of birthday comparisons.
+To explain this concept, we can take the possible two-person combinations of these 23 people, which is equal to 253. This is the number of pairs of people we can create where order doesn't matter, or number of potential birthday comparisons.
 
-In a hash table, the mumber of people would be equal to the capacity, or number of buckets in our table.  For example, if we had a hash table with 23 slots and choosing two elements that could hash to the same index.
+In a hash table, the number of people in the birthday paradox would be equivalent to the key/value pairs to be inserted in the table, as this calculates the number of possible comparsions between two elements or pairings.  
 
 
 ![image](https://user-images.githubusercontent.com/91037796/204158108-db5e66fc-bc83-432a-8cb2-8ef02a8244a8.png)
@@ -65,21 +65,23 @@ Taking the exponent of that chance, or multiplied by the number of 253 possible 
 
 Using similar math following the birthday problem, if we have 2,450 keys hashed into a million buckets, even with perfectly uniform random distribution (from a good hash function), according to the birthday problem there is approximately a 95% chance at least two of those keys will be hashed to the same slot.
 
-We use the combination formula from 2,450 keys choose two to calculate that there are 3,000,025 possible pairs.
+We use the combination formula from 2,450 keys choose two to calculate that there are 3,000,025 possible pairs or comparisons.
 
 
 ```math
 C(n,k) = \binom{n}{k} = \frac{2,450!}{2!(2,448)! } = 3,000,025 
 ```
 
-There is a 999,999 in 1,000,000, or 99.9999% chance of not being in a collision for a single pair.  This is the chance of NOT inserting a key/value pair into the same bucket.
+There is a 999,999 in 1,000,000, or 99.9999% chance of not being in a collision for a single pair.  This is the chance of NOT inserting a key/value pair into the same bucket. Assuming a hash function with a uniform distribution.
 
-The chance of there not being a collision for all possible pairings of 2,450 keys inserted to the hash table, is the probability of not having a single collision raised to the exponent of the number of pairs:
+The chance of there NOT being a collision for all possible pairings of 2,450 keys inserted to the hash table, is the probability of not having a single collision raised to the exponent of the number of pairs:
 
 ```math
 {0.999999}^{3,000,025} = 4.97% 
 ```
-If there is a 4.97% of there not being a single collision in a hash table with 1 million buckets and 2,450 keys, then there is a 1 - 4.97%, or 95% chance that at least two keys in this hash table will be hashed to the same slot.  
+If there is a 4.97% of there not being a single collision in a hash table with 1 million buckets and 2,450 keys, then there is a ( 1 - 4.97% ), or 95% chance that at least two keys in this hash table will be hashed to the same slot.  In other words, a 95% chance this table would have a collision.
+
+This is significant as one would think a collision would be more unlikely in a situation where so little of this hash table is used (2,450 elements with 1,000,000 buckets).
 
 As such, separate chaining and open addressing is used to handle these potential collisions.
 
