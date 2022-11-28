@@ -229,13 +229,17 @@ class HashMap:
 # Open Addressing
 
 
-Quadratic Probing is calculated using the following formula, where i = index.  j is incremented by 1 each time the probe occurrs, until an empty spot is found in the dynamic array to insert the element.
+Quadratic Probing is calculated using the following formula, where i = index, m is the capacity of the array, and j is a separate variable incremented by 1 each time the probing is unsuccesful. 
+
+```math 
+({i_{initial} + j^2 }) \bmod m
+```
+
+j is incremented by 1 each time the probe occurrs, until an empty spot is found in the dynamic array to insert the element.  The numerator of the function is divided by the capacity, to obtain the modulus, which is used as the index to insert/probe for an empty spot.  This is so that insertion/probing can wrap back around the array if needed.
 
 This table resizes the underlying dynamic array to double its capacity if the load factor is equal to or greater than 0.5.
 
-```math 
-{i_{initial} + j^2 } \bmod m
-```
+
 
 ![image](https://user-images.githubusercontent.com/91037796/204156785-6202cd9b-e6e5-455c-83fc-a50534af536c.png)
 
