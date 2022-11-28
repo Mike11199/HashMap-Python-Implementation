@@ -98,8 +98,15 @@ This is significant as one would think a collision would be more unlikely in a s
 
 As such, separate chaining and open addressing is used to handle these potential collisions.
 
+Alternate calculation:
+
+
+```math
+\prod _{n=1}^{2450}\frac{\left(1000000-n\right)}{1000000}
+```
+
 ```python
-def calculate_probability():
+def calculate_probability_no_collisions():
     
     result = 1    
     for i in range(1,2450):
@@ -107,7 +114,7 @@ def calculate_probability():
     print(result)
         
     
-def calculate_probability_2():
+def calculate_probability_no_collisions_2():
     
     constant = .999999
     result =1    
@@ -115,9 +122,8 @@ def calculate_probability_2():
         result *= constant
     print(result)
     
-calculate_probability()    # 0.049663
-calculate_probability_2()  # 0.049785
-
+calculate_probability_no_collisions()    # 0.049663
+calculate_probability_no_collisions_2()  # 0.049785
 ```
 
 </br>
