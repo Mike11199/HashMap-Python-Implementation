@@ -176,7 +176,53 @@ class HashMap:
 
 ```
 
+```python
+    def put(self, key: str, value: object) -> None:
+        """
+        This method inserts a new key/value pair into the hash table, and increments the hash table's size.
+        
+        If the key already exists in the table, the value of the key is updated.
+        
+        The method also handles table resizing.  It calculates the table load of the hash table, using the table load method.  This is calculated as follows:
+        
+            Load Factor (lowercase lambda) = num elements (size) / num buckets (capacity) 
+        
+        If the table load is greater or equal to 1.0, the capacity of the hash table is doubled, and incremented if it is not a prime number after being doubled. 
+        This helps ensure the hash table has fewer collisions and maintains an average time complexity of O(1) for its operations.
+        
+        This method uses separate chaining to resolve table collisions.  Each array index in the hash table's underlying dynamic array consists of a linked list.
+        If an element already exists at an index, the new key/value pair is added to the linked list.
+        """
+        
+        # CALCULATE TABLE LOAD AND DOUBLE THE CAPACITY OF THE HASH TABLE IF NEEDED
+        table_load = self.table_load()
+        
+        if table_load >= 1.0:  
+            curr_capacity = self._capacity
+            new_capacity = curr_capacity * 2
+            self.resize_table(new_capacity)
 
+        
+        # CALCULATE THE INDEX OF THE KEY TO BE INSERTED/UPDATED USING THE HASH FUNCTION AND HASH TABLE CAPACITY
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity
+        
+        hash_map_bucket = self._buckets[index]
+        
+        # IF THE LINKED LIST AT THAT ARRAY LOCATION IS EMPTY, INSERT NODE CONTAINING THE KEY, VALUE PAIR AT THE FRONT OF THE LL
+        if hash_map_bucket.length() == 0:        
+            hash_map_bucket.insert(key, value)
+            self._size += 1
+        # ELSE IF THE LINKED LIST CONTAINS THAT KEY, UPDATE THE KEY'S VALUE, OR INSERT THE NEW KEY/VALUE AT THE FRONT OF THE LL IF NOT ALREADY IN THE TABLE
+        else:
+            existing_node_with_key = hash_map_bucket.contains(key)
+            if existing_node_with_key:
+                existing_node_with_key.value = value
+            else:
+                hash_map_bucket.insert(key, value)
+                self._size += 1
+
+```
 
 </br>
 
@@ -228,4 +274,70 @@ class HashMap:
     def __iter__(self):
 
     def __next__(self):
+```
+
+```python
+    def put(self, key: str, value: object) -> None:
+        """
+        This method adds a new key/value pair as a hash entry into the hash table, and increments the hash table's size.
+        
+        Before adding a value, the table load of the (num elements/ capacity) is calculated.  If the table load is above or equal to 0.5, meaning that half
+        the underlying dynamic array's values are filled, the table is resized to double the current capacity, to the nearest prime number.  This helps reduce
+        collisions and ensures O(1) time complexity for most operations.
+        
+        The method first uses the hash function to calculate the insertion point of the new key/value pair.
+        
+        If the insertion point is a tombstone, it will update the tombstone if its key matches the key to be added, or if the key is not elsewhere in the table.
+        
+        If the insertion point matches the key, it will update the value.
+        
+        If the insertion point is a key/value not matching the key and not a tombstone, it will continue to increment the index using quadratic probing, until
+        an empty spot in the hash table is reached, or the previous conditions of finding the existing key, tombstone with existing key, or tombstone where key
+        is not elsewhere is met.                  
+        """
+        table_load = self.table_load()
+        
+        # RESIZE IF HALF OF DYNAMIC ARRAY OF HASH TABLE'S FREE SPACE IS 50 PERCENT OR LESS
+        if table_load >= 0.5:  
+            curr_capacity = self._capacity
+            new_capacity = curr_capacity * 2
+            self.resize_table(new_capacity)
+
+        # CALCULATE INITIAL INDEX BASED ON HASH FUNCTION AND KEY
+        _hash = self._hash_function(key)
+        index = _hash % self._capacity                        
+        
+        j = 1
+        quad_index = index
+        while self._buckets[quad_index] is not None:
+                        
+            if self._buckets[quad_index].is_tombstone is True:
+                # IF A TOMBSTONE EXISTS WITH CURRENT KEY, UPDATE IT TO REMOVE THE TOMBSTONE AND UPDATE VALUE AS WELL
+                if self._buckets[quad_index].key == key:
+                    self._buckets[quad_index].value = value
+                    self._buckets[quad_index].is_tombstone = False
+                    self._size +=1
+                    return 
+                # IF A TOMBSTONE EXISTS NOT EQUAL TO THE CURRENT KEY, AND THE KEY DOES NOT EXIST ELSEWHERE IN THE TABLE, REPLACE TOMBSTONE WITH KEY/VALUE
+                elif self.contains_key(key) is False:                    
+                    new_entry = HashEntry(key, value) 
+                    self._buckets[quad_index] = new_entry
+                    self._size += 1    
+                    return                
+            
+            # IF NOT THE VALUE IS NOT A TOMBSTONE, BUT IS EQUAL TO THE CURRENT KEY, SIMPLY UPDATE THE VALUE AND RETURN
+            elif self._buckets[quad_index].key == key:
+                self._buckets[quad_index].value = value
+                return
+            
+            quad_index = (index + j**2) % self._capacity   #QUADRATIC PROBING TO INCREMENT INSERTION INDEX IF NEEDED
+            j += 1   
+            
+        
+        # IF THE FUNCTION REACHES HERE AND HAS NOT RETURNED, WE HAVE REACHED A NONE VALUE TO INSERT THE NEW KEY/VALUE PAIR INTO
+        new_entry = HashEntry(key, value) 
+        self._buckets[quad_index] = new_entry
+        self._size += 1
+
+      
 ```
