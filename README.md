@@ -98,6 +98,27 @@ This is significant as one would think a collision would be more unlikely in a s
 
 As such, separate chaining and open addressing is used to handle these potential collisions.
 
+```python
+def calculate_probability():
+    
+    result = 1    
+    for i in range(1,2450):
+        result *= (1000000 - i)/1000000
+    print(result)
+        
+    
+def calculate_probability_2():
+    
+    constant = .999999
+    result =1    
+    for _ in range(3000025):
+        result *= constant
+    print(result)
+    
+calculate_probability()    # 0.049663
+calculate_probability_2()  # 0.049785
+
+```
 
 </br>
 
