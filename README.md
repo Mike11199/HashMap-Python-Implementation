@@ -72,6 +72,7 @@ Taking the exponent of that chance, or multiplied by the number of 253 possible 
 \displaystyle{\left(\frac{364}{365}\right)^{253} = .4995}
 ```
 
+</br>
 </br> 
 
 # Table Collisions - HashMap Example
