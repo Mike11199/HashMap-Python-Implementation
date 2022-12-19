@@ -1,8 +1,8 @@
-# HashMap Implementation
+# Hash Map Implementation
 
-This is the portfolio project for the Oregon State University course CS 261 - Data Structures, which is allowed to be posted to a public GitHub repo.  The project implements a HashMap data structure using two distinct methods to handle table collisions - Open Addressing, and Separate Chaining.
+This is the portfolio project for the Oregon State University course CS 261 - Data Structures, which is allowed to be posted to a public GitHub repo.  The project implements a Hash Map data structure using two distinct methods to handle table collisions - Open Addressing, and Separate Chaining.
 
-
+</br>
 
 - **Open Addressing**
    - In this implementation, the data structure probes for an empty spot in the HashTable's underlying dynamic array if a collision occurs, until it finds an empty spot to insert the element in. 
@@ -14,7 +14,9 @@ This is the portfolio project for the Oregon State University course CS 261 - Da
 
 # HashMap Time Complexity
 
-A hash map allows insertion and lookup of values in amortized constant time O(1), with a potential O(N) resizing cost.  Resizing the table is performed in order to keep the table load factor low, which reduces the chance of collisions occurring. 
+A Hash Map is an abstract data type that maps keys to values.  It uses a hash function to calculate an array index, which determines where to look up or insert a value into the underlying data structure.  As the hash function tells us where this value would be found or inserted, this allows for amortized constant time complexity of operations such as insertions and look ups.  This is superior to the linear traversal we would have to use in an unsorted array, O(N) time complexity, or O( log n) of binary search in an sorted array/ binary search tree.
+
+A hash map allows insertion and lookup of values in amortized constant time O(1), due to a potential O(N) resizing cost.  Resizing the table is performed in order to keep the table load factor low, which reduces the chance of collisions occurring. In the worst case, all elements could collide in the same bucket, leading to O(N) time complexity.
 
 The load factor is expressed as n (number of elements) / m (number of buckets).
 
