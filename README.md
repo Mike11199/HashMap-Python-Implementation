@@ -14,7 +14,9 @@ This is the portfolio project for the Oregon State University course CS 261 - Da
 
 # HashMap Time Complexity
 
-A Hash Map is an abstract data type that maps keys to values.  It uses a hash function to calculate an array index, which determines where to look up or insert a value into the underlying data structure.  As the hash function tells us where this value would be found or inserted, this allows for amortized constant time complexity of operations such as insertions and look ups.  This is superior to the linear traversal we would have to use in an unsorted array, O(N) time complexity, or O( log n) of binary search in an sorted array/ binary search tree.
+A Hash Map is an abstract data type that maps keys to values.  It uses a hash function to calculate an array index, which determines where to look up or insert a value into the underlying data structure.  As the hash function tells us where this value would be found or inserted, this allows for amortized constant time complexity of operations such as insertions and look ups.  
+
+This is superior to the linear traversal we would have to use in an unsorted array, O(N) time complexity, or the O(log n) time complexity of binary search in a sorted array/ binary search tree.
 
 A hash map allows insertion and lookup of values in amortized constant time O(1), due to a potential O(N) resizing cost.  Resizing the table is performed in order to keep the table load factor low, which reduces the chance of collisions occurring. In the worst case, all elements could collide in the same bucket, leading to O(N) time complexity.
 
