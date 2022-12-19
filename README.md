@@ -334,7 +334,7 @@ class HashMap:
                     self._size += 1    
                     return                
             
-            # IF NOT THE VALUE IS NOT A TOMBSTONE, BUT IS EQUAL TO THE CURRENT KEY, SIMPLY UPDATE THE VALUE AND RETURN
+            # IF THE VALUE IS NOT A TOMBSTONE, BUT IS EQUAL TO THE CURRENT KEY, SIMPLY UPDATE THE VALUE AND RETURN
             elif self._buckets[quad_index].key == key:
                 self._buckets[quad_index].value = value
                 return
